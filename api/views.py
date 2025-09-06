@@ -1,4 +1,4 @@
-#from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from students.models import Student
 from .serializers import StudentSerializers
@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from employees.models import Employees
 from .serializers import EmployeeSerializers
 
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,viewsets
 
 @api_view(['GET','POST'])
 def student_data(request):
@@ -84,7 +84,7 @@ def studentdetailview(request, pk):
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT) """
     
-class Employee_view(mixins.CreateModelMixin,mixins.ListModelMixin,generics.GenericAPIView):
+""" class Employee_view(mixins.CreateModelMixin,mixins.ListModelMixin,generics.GenericAPIView):
     queryset = Employees.objects.all()
     serializer_class = EmployeeSerializers
 
@@ -105,4 +105,44 @@ class Employee_single(mixins.RetrieveModelMixin,mixins.DestroyModelMixin,mixins.
         return self.update(request, pk)
     
     def delete(self, request, pk):
-        return self.destroy(request, pk)
+        return self.destroy(request, pk) """
+
+""" class Employee_view(generics.ListCreateAPIView):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeeSerializers
+
+class Employee_single(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeeSerializers """
+
+""" class Employee_viewset(viewsets.ViewSet):
+    def list(self, request):
+        employee = Employees.objects.all()
+        serializer = EmployeeSerializers(employee, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def create(self,request):
+        serializer = EmployeeSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def retrieve(self, request, pk=None):
+        employee = get_object_or_404(Employees, pk=pk)
+        serializer = EmployeeSerializers(employee)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def update(self, request, pk=None):
+        employee = get_object_or_404(Employees, pk=pk)
+        serializer = EmployeeSerializers(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, pk=None):
+        employee = get_object_or_404(Employees, pk=pk)
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT) """
+    
+class Employee_viewset(viewsets.ModelViewSet):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeeSerializers
