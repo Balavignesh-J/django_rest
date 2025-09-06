@@ -12,6 +12,9 @@ from .serializers import EmployeeSerializers
 
 from rest_framework import generics,mixins,viewsets
 
+from blogs.serializers import CommentSerializers,BlogSerializers
+from blogs.models import Blog,Comment
+
 @api_view(['GET','POST'])
 def student_data(request):
     if request.method == 'GET':
@@ -146,3 +149,21 @@ class Employee_single(generics.RetrieveUpdateDestroyAPIView):
 class Employee_viewset(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
     serializer_class = EmployeeSerializers
+
+class Blog_view(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+
+class Comment_view(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializers
+
+class BlogDetail_view(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+    lookup_field = 'pk'
+
+class CommentDetail_view(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializers
+    lookup_field = 'pk'
