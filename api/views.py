@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from employees.models import Employees
 from .serializers import EmployeeSerializers
+from .paginations import CustomPagination
 
 from rest_framework import generics,mixins,viewsets
 
@@ -149,6 +150,7 @@ class Employee_single(generics.RetrieveUpdateDestroyAPIView):
 class Employee_viewset(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
     serializer_class = EmployeeSerializers
+    pagination_class = CustomPagination
 
 class Blog_view(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
