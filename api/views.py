@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from employees.filters import EmployeeFilter
 from students.models import Student
 from .serializers import StudentSerializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.filters import SearchFilter,OrderingFilter
 
 from employees.models import Employees
 from .serializers import EmployeeSerializers
@@ -151,10 +153,14 @@ class Employee_viewset(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
     serializer_class = EmployeeSerializers
     pagination_class = CustomPagination
+    filterset_class = EmployeeFilter
 
 class Blog_view(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
+    filter_backends = [SearchFilter,OrderingFilter]
+    search_fields = ['title','body']
+    ordering_fields = ['id','title']
 
 class Comment_view(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
